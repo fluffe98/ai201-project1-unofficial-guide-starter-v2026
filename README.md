@@ -1,6 +1,6 @@
 # The Unofficial Guide
 
-<!-- Replace this line with your name and which corpus you picked. -->
+Sai Kiran K M — campus_life corpus
 
 > **This file is your submission.** Fill it in as you go — most sections get
 > written during the milestone that produces them, not at the end.
@@ -179,9 +179,22 @@ five out-of-scope questions were correctly refused.
 
      Milestone 5. -->
 
-**1.**
+**1.** 1. When `pip install -r requirements.txt` failed with a red error about
+"Microsoft Visual C++ 14.0 or greater is required," I didn't understand
+what it meant, so I asked Claude to explain the error. It told me the
+chroma-hnswlib package needed a C++ compiler to build, which my laptop
+didn't have, and pointed me to install Microsoft's Visual C++ Build
+Tools with the "Desktop development with C++" workload. I installed it,
+restarted VS Code, and reran the install, it worked on the second try.
 
-**2.**
+**2.** 2. For the README's relevance cutoff table, I had already gathered the
+real distance numbers myself by running my test questions and the
+out-of-scope questions through the system. I gave Claude the exact
+numbers and questions and asked for a prompt I could paste into Claude
+Code to fill in the Sample Answer and cutoff table sections without
+touching anything else in the README. I ran that prompt, then opened
+the file myself afterward to confirm the data landed correctly and
+nothing else got changed.
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
