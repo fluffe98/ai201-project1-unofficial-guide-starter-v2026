@@ -23,8 +23,9 @@ For at least 4 of my 5 test questions, the retrieved chunks include one that
 contains the answer.
 
 **Why this target:**
-<!-- e.g. "One of my questions is about a topic only two documents mention, so
-     I expect that one to be hard." -->
+My dining dollars question depends on the system catching a subtle detail
+(what happens specifically from spring to fall, not just that dining
+dollars exist), so I expect that one might be the hardest to nail exactly.
 
 ---
 
@@ -33,8 +34,10 @@ contains the answer.
 Every answer the system produces names at least one source document.
 
 **Why this target:**
-<!-- Why all five and not four? What about your setup makes that achievable —
-     or what would have to go wrong for it not to be? -->
+Naming a source isn't about whether the answer is correct, it's a formatting
+requirement baked into the prompt. As long as the model follows instructions,
+every single answer should include a source, so I expect full marks here,
+not partial.
 
 ---
 
@@ -68,11 +71,16 @@ in at least 4 of 5 tries.
           sentence cut in half at either end."
        - "No chunk is shorter than 200 characters, since anything below that
           in my corpus turned out to be a heading with no content under it." -->
-
+At least 4 of 5 sampled chunks contain a full sentence with no cut-off
+sentence at the start or end, since my documents are short posts where
+the useful information is usually a single self-contained thought.
 
 
 **Why this target:**
-
+My corpus's average chunk is 317 characters, well
+under any reasonable splitting threshold, so I'd expect most chunks to
+already be whole documents rather than fragments. If they're not, that
+tells me my chunking function is cutting mid-sentence unnecessarily.
 
 
 ---
@@ -86,11 +94,15 @@ in at least 4 of 5 tries.
      handles badly, about source attribution being correct rather than merely
      present — anything, as long as it names a number or an observable
      outcome. -->
-
+For at least 3 of my 5 test questions, at least half of the retrieved
+chunks (top-k) are actually about the question's topic, not just loosely
+related documents that happen to share a few words.
 
 
 **Why this target:**
-
+When I tested a parking question manually, only 1
+of 5 retrieved chunks was actually about parking, the rest were about
+unrelated housing buildings. I want to know if that's typical or a fluke.
 
 
 ---
