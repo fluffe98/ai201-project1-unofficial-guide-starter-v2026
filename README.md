@@ -128,11 +128,14 @@ Laundry costs $1.75 wash, $1.75 dry, app-based. On noise: moderate; the building
 <!-- One complete question and answer, pasted as text, with the source line
      visible. Milestone 4. -->
 
-**Question:**
+**Question:** How long do student parking permits for the west lot take to sell out?
 
 **Answer:**
 
 ```
+Student permits for the west lots sell out in about three days.
+
+Source: admin_parking_permits.txt
 ```
 
 **My relevance cutoff:**
@@ -146,9 +149,24 @@ Laundry costs $1.75 wash, $1.75 dry, app-based. On noise: moderate; the building
 
      Milestone 4. -->
 
+I kept the default cutoff of 0.6. My five in-corpus test questions had best
+distances between 0.135 and 0.368, and my five out-of-scope questions had
+best distances between 0.825 and 0.934, a gap of over 0.45 with no overlap
+between the two groups. 0.6 sits safely in the middle of that gap, and all
+five out-of-scope questions were correctly refused.
+
 | Question | In corpus? | Best distance |
 |---|---|---|
-|  |  |  |
+| How long do student parking permits for the west lot take to sell out? | Yes | 0.187 |
+| How late can you declare a course as pass/fail? | Yes | 0.214 |
+| How many days do you have to start a grade appeal with the instructor? | Yes | 0.135 |
+| Do dining dollars roll over from spring to the following autumn? | Yes | 0.204 |
+| How long does a student account stay active after graduation? | Yes | 0.368 |
+| What is the capital of Mongolia? | No | 0.825 |
+| How do I change the oil in a diesel engine? | No | 0.934 |
+| Who won the 1994 World Cup? | No | 0.886 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.844 |
+| How do I write a for loop in Rust? | No | 0.896 |
 
 ## How I Used AI
 

@@ -55,7 +55,11 @@ in at least 4 of 5 tries.
 **Why this target:**
 <!-- What did your distances look like when you set the cutoff in Milestone 4?
      Was there a clean gap, or did the two groups overlap? -->
-
+My in-corpus questions had distances between 0.135 and 0.368, and my
+out-of-scope questions had distances between 0.825 and 0.934, a gap of
+over 0.45 with zero overlap. The default cutoff of 0.6 sits safely in
+the middle of that gap, so I kept it unchanged. All 5 out-of-scope
+questions were correctly refused.
 ---
 
 ## 4. Something about your chunks
