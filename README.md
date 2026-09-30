@@ -375,9 +375,24 @@ other questions retrieve 1 of 2 on-topic, which meets "at least half."
 
      Milestone 5. -->
 
+No criteria are still missed after the fix, all 5 now meet their
+targets. If I kept going, I'd tighten criterion 5's target itself,
+since "at least half on-topic" is a fairly loose bar, exactly 1 of 2
+chunks on-topic technically passes but still means half of every
+retrieval is noise. A stricter version, like requiring the top result
+specifically (not just half) to be on-topic, would be a better test
+of real precision.
+
 ## What I'd Do Differently
 
 <!-- Knowing what you know now — which of your five criteria would you write
      differently, and why?
 
      Milestone 5. -->
+
+I'd write criterion 5 with a tighter target from the start, something
+like "the single closest retrieved chunk is on-topic for at least 4 of
+5 questions," rather than "at least half of top-k," since top-k itself
+turned out to be something I'd tune later, and the original wording
+let a low-effort fix (just shrinking top-k) satisfy it without
+actually proving the system finds the right document reliably.
