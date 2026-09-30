@@ -328,9 +328,11 @@ not five separate problems.
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** Lowered TOP_K from 5 to 2 in config.py.
 
-**Why I picked it:**
+**Why I picked it:** My diagnosis found only 1 genuinely relevant chunk
+exists per question, so top-k=5 was filling 4 of 5 slots with
+off-topic noise, directly causing criterion 5's miss.
 
 <!-- Connect it to a specific diagnosis above in one sentence. If you can't,
      you picked a fix because it sounded impressive. -->
@@ -342,13 +344,19 @@ not five separate problems.
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Chunks read as complete thoughts | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. Retrieved chunks stay on-topic | 3 of 5 | 5/5 | 5/5 | 5/5 | MET |
 
 **Did it help?**
+
+Yes. Criterion 5 went from 0 of 5 questions meeting the on-topic bar
+to 5 of 5. Lowering top-k from 5 to 2 removed the off-topic filler
+chunks without losing any correct answers, criteria 1-4 stayed
+perfect. Dining dollars now retrieves 2 of 2 on-topic chunks; all
+other questions retrieve 1 of 2 on-topic, which meets "at least half."
 
 <!-- Say plainly whether it did, and how you know. If it made things worse,
      say that — a change that backfired, honestly reported, earns full credit
