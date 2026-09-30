@@ -179,7 +179,7 @@ five out-of-scope questions were correctly refused.
 
      Milestone 5. -->
 
-**1.** 1. When `pip install -r requirements.txt` failed with a red error about
+**1.**  When `pip install -r requirements.txt` failed with a red error about
 "Microsoft Visual C++ 14.0 or greater is required," I didn't understand
 what it meant, so I asked Claude to explain the error. It told me the
 chroma-hnswlib package needed a C++ compiler to build, which my laptop
@@ -187,7 +187,7 @@ didn't have, and pointed me to install Microsoft's Visual C++ Build
 Tools with the "Desktop development with C++" workload. I installed it,
 restarted VS Code, and reran the install, it worked on the second try.
 
-**2.** 2. For the README's relevance cutoff table, I had already gathered the
+**2.** For the README's relevance cutoff table, I had already gathered the
 real distance numbers myself by running my test questions and the
 out-of-scope questions through the system. I gave Claude the exact
 numbers and questions and asked for a prompt I could paste into Claude
@@ -223,15 +223,52 @@ nothing else got changed.
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Chunks read as complete thoughts | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. Retrieved chunks stay on-topic | 3 of 5 | 0/5 | 0/5 | 0/5 | MISSED |
 
 <!-- Underneath, paste the REAL output for each criterion from one of your
      runs — the actual text your system produced, not a description of it.
      Name the file and function that produced it. -->
+
+**Criterion 1 & 2 evidence** (from results/run_2026-09-29_2109_before.md, produced by run_eval.py::main):
+
+Question: How long do student parking permits for the west lot take to sell out?
+Run 1: "Student permits for the west lots sell out in about three days. Source: admin_parking_permits.txt"
+Run 3: "Student parking permits for the west lots sell out in about three days (admin_parking_permits.txt)."
+
+Question: How many days do you have to start a grade appeal with the instructor?
+Run 1: "You have fifteen days of the grade posting to start a grade appeal with the instructor (admin_grade_appeals.txt)."
+
+**Criterion 3 evidence** (produced by run_eval.py::check_out_of_scope, cutoff 0.6):
+
+| Out-of-scope question | Best distance | Gate |
+|---|---|---|
+| What is the capital of Mongolia? | 0.825 | refused |
+| How do I change the oil in a diesel engine? | 0.934 | refused |
+| Who won the 1994 World Cup? | 0.886 | refused |
+| What is the recommended dosage of ibuprofen for a headache? | 0.844 | refused |
+| How do I write a for loop in Rust? | 0.896 | refused |
+
+Gate refused 5 of 5.
+
+**Criterion 4 evidence** (from python app.py chunks -n 5, produced by chunker.py::split_documents):
+All 5 sampled chunks (admin_add_drop_deadline.txt, course_biol_160.txt,
+course_hist_118_workload.txt, dining_pellew_dining_hall_followup.txt,
+housing_innisfree_hall.txt) read as complete thoughts, no sentence cut
+off at start or end.
+
+**Criterion 5 evidence** (from results/run_2026-09-29_2109_before.md, Sources retrieved lists):
+| Question | On-topic chunks | Total retrieved |
+|---|---|---|
+| Parking | 1 | 5 |
+| Pass/fail | 1 | 5 |
+| Grade appeal | 1 | 5 |
+| Dining dollars | 2 | 5 |
+| Graduation account | 1 | 5 |
+No question reached "half on-topic" (needed 3 of 5).
 
 ## Verdicts
 
@@ -246,11 +283,11 @@ nothing else got changed.
 
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
-| 4 |  |  |  |
-| 5 |  |  |  |
+| 1 | Retrieved chunk contains the answer | MET | All 5 questions had the correct answer in all 3 runs, exceeding the 4 of 5 target. |
+| 2 | Every answer names a source | MET | Every answer across all 3 runs named its source file. |
+| 3 | Gate stops out-of-corpus questions | MET | Gate refused all 5 out-of-scope questions. |
+| 4 | Chunks read as complete thoughts | MET | All 5 sampled chunks were complete thoughts, no cut-off sentences. |
+| 5 | Retrieved chunks stay on-topic | MISSED | No question had even half its retrieved chunks on-topic; best was 2 of 5 on dining dollars. |
 
 ## Diagnoses
 
@@ -271,6 +308,23 @@ nothing else got changed.
      low, and which one you'd tighten and to what.
 
      Milestone 3. -->
+
+Criterion 5 missed: retrieved chunks staying on-topic.
+
+Stage: retrieval. Top-k is fixed at 5, but most questions only have one
+genuinely relevant document in the corpus. Since retrieval always
+returns exactly 5 chunks regardless of how many are actually close in
+meaning, the remaining 4 slots get filled with the next-closest
+leftovers, which are often unrelated (e.g. the parking question pulled
+back dining, transit, and advising documents alongside the one real
+parking document). This didn't hurt answer quality since the model
+correctly ignored irrelevant chunks when generating answers, but it
+means retrieval precision is low even though generation is grounded
+correctly.
+
+Pattern: this happened on every single question, not just one, so it's
+a single systemic issue (top-k set too high for a corpus this size),
+not five separate problems.
 
 ## The Improvement
 
